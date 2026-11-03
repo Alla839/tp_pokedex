@@ -1,4 +1,7 @@
-import { ScrollView } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, Text } from "react-native";
+import Aide from "../components/Aide";
+import Compteur from "../components/Compteur";
 import PokemonCard from "../components/PokemonCard";
 import Titre from "../components/Titre";
 
@@ -15,16 +18,39 @@ const POKEMONS = [
 
 
 export default function Index() {
+  
+  const [feu, setFeu] = useState (false); 
+
+  const visible = feu ? POKEMONS.filter((p) => p.type == "Feu"):POKEMONS; 
+  
+  
+  
+  
   return (
+
+    
 
     <ScrollView
       style = {{backgroundColor: "#c9afce"}}
     >
     
-    <Titre nombre = {POKEMONS.length} />
+    {/* <Titre nombre = {POKEMONS.length} /> */}
 
+    <Titre nombre = {visible.length} /> 
+    <Pressable onPress = {() => setFeu (!feu)}
+      style = {{
+        backgroundColor : "black",
+        padding : 10,
+      }}
+      
+      >
+        <Text style = {{color: "white"}}>
+          {feu ? "tt afficher": "Vive le feu"}
+        </Text>
 
-    {POKEMONS.map ((p) => (
+      </Pressable>
+
+    {visible.map ((p) => (
       <PokemonCard key = {p.number} 
       number = {p.number}
       name= {p.name}
@@ -33,7 +59,8 @@ export default function Index() {
       />
     ))}
 
-    
+    <Compteur/>  
+    <Aide/>
 
     </ScrollView>
   );
