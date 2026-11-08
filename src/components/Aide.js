@@ -17,7 +17,7 @@ export default function Aide ({}) {
 
         </Pressable>
 
-        <Text> {etat  && "The bot supposed to help ur a** is not available at this moment, thanks to try again !!"} </Text>
+        <Text> {etat  && "The bot supposed to help ur a** is not available at this moment, thanks to try again !! 'said with a heavy british accent'"} </Text>
 
         </View>
     )

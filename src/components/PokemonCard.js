@@ -1,16 +1,15 @@
-import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
 const ARTWORK =
     "https://raw.githubusercontent.com/PokeAPI/sprites" +
     "/master/sprites/pokemon/other/official-artwork/";
 
-export default function PokemonCard({ number, name, type }) {
-    const [captured, setcaptured] = useState(false);
+export default function PokemonCard({ number, name, type , captured, onCapture}) {
+    // const [captured, setcaptured] = useState(false);//ici parce que ds index l'etat va changer pr tt les pokemons
 
     return (
 
-        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: captured ? "#d6255d" : "#3bed70" }}>
+        <View style={{ flex: 1, flexDirection: "row", alignItems: "center", backgroundColor: captured ? "#d6255d" : "#3bed70" }}>
 
             <Image source={{ uri: `${ARTWORK}${number}.png` }}
                 style={{ width: 80, height: 80 }} />
@@ -24,7 +23,8 @@ export default function PokemonCard({ number, name, type }) {
             </View>
 
             <Pressable
-                onPress={() => setcaptured(!captured)}
+                // onPress={() => setcaptured(!captured)}
+                onPress = {onCapture}
                 style={{ backgroundColor: captured ? "#9234f0" : "#f9f103", padding : 8, marginLeft: "auto" }}
             >
                 <Text style={{ color: captured ? "white" : "#111213" }}>

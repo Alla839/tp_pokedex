@@ -1,68 +1,116 @@
 import { useState } from "react";
-import { Pressable, ScrollView, Text } from "react-native";
-import Aide from "../components/Aide";
-import Compteur from "../components/Compteur";
+import { FlatList, Pressable, Text, View } from "react-native";
 import PokemonCard from "../components/PokemonCard";
-import Titre from "../components/Titre";
+import POKEMONS from "../data/pokemons";
 
 
-const POKEMONS = [
-  { number: 1, name: "Bulbizarre", type: "Plante" },
-  { number: 4, name: "Salamèche", type: "Feu" },
-  { number: 7, name: "Carapuce", type: "Eau" },
-  { number: 25, name: "Pikachu", type: "Électrik" },
-  { number: 37, name: "Goupix", type: "Feu" },
-  { number: 43, name: "Mystherbe", type: "Plante" },
-];
+// const POKEMONS = [
+//   { number: 1, name: "Bulbizarre", type: "Plante" },
+//   { number: 4, name: "Salamèche", type: "Feu" },
+//   { number: 7, name: "Carapuce", type: "Eau" },
+//   { number: 25, name: "Pikachu", type: "Électrik" },
+//   { number: 37, name: "Goupix", type: "Feu" },
+//   { number: 43, name: "Mystherbe", type: "Plante" },
+// ];
 
 
 
 export default function Index() {
-  
-  const [feu, setFeu] = useState (false); 
+  // fct
+  const [captured, setCaptured] = useState ([]); 
+  const [capturedonly, Setcapturedonly]= useState (false)
 
-  const visible = feu ? POKEMONS.filter((p) => p.type == "Feu"):POKEMONS; 
+  // fct qui capture 
+
+  const onCapture = (number) => {
+    if (captured.includes (number)) {
+      setCaptured (captured.filter ((n) => n!== number));
+    } else {setCaptured ([...captured, number])}
+  };
+
+  const visible = capturedonly ? POKEMONS.filter((p) => captured.includes(p.number)):POKEMONS; 
   
-  
-  
-  
+
+
+
   return (
-
     
+    <View style={{ flex: 1 }} >
+     {/* flatlist garde l'etat des premiers elments   */}
 
-    <ScrollView
-      style = {{backgroundColor: "#c9afce"}}
-    >
-    
-    {/* <Titre nombre = {POKEMONS.length} /> */}
+    <FlatList 
 
-    <Titre nombre = {visible.length} /> 
-    <Pressable onPress = {() => setFeu (!feu)}
-      style = {{
-        backgroundColor : "black",
-        padding : 10,
-      }}
+      data = {visible}
+      extraData = {captured}
+      keyExtractor = {(item)=> String (item.number)}
+      numColumns = {2}
       
-      >
-        <Text style = {{color: "white"}}>
-          {feu ? "tt afficher": "Vive le feu"}
-        </Text>
+      ListHeaderComponent = {
+        <View>
+          <Text>{POKEMONS.length} pokémon. {captured.length} capturé 🎶🎶</Text>
+          <Pressable onPress = {()=> Setcapturedonly (!capturedonly) }
+           style = {{
+      backgroundColor : "purple",
+      padding : 10,
+      }}
+       >
 
-      </Pressable>
+          <Text style={{ color: "white" }}>
+          {capturedonly ? "Tt afficher" : "Mes captures"}</Text>
+          </Pressable>
+        </View>
 
-    {visible.map ((p) => (
-      <PokemonCard key = {p.number} 
-      number = {p.number}
-      name= {p.name}
-      type= {p.type} 
+      }
 
-      />
-    ))}
 
-    <Compteur/>  
-    <Aide/>
+     renderItem = {({item}) => (
+     
+     
+      <PokemonCard number = {item.number} name = {item.name} type=  {item.type}
+      captured = {captured.includes (item.number)}
+      onCapture = {() => onCapture (item.number)} />
+      )}
 
-    </ScrollView>
+      
+    
+    />
+    </View>
+
   );
-
 }
+      
+// <Compteur/>  
+//     <Aide/>  
+//     {/* // <Titre nombre = {POKEMONS.length} /> */}
+
+//     <Titre nombre = {POKEMONS.length} /> 
+//     <Pressable onPress = {() => Setcapturedonly (!capturedonly)}
+//       
+//       >
+        
+        
+//         {/* il marche  */}
+//         {/* <Text style = {{color: "white"}}>
+//           {feu ? "tt afficher": "Vive le feu"}
+//         </Text> */}
+
+//       </Pressable>
+
+//     {/* {POKEMONS.map ((p) => (
+//       <PokemonCard key = {p.number} 
+//       number = {p.number}
+//       name= {p.name}
+//       type= {p.type} 
+
+//       />
+//     ))} */}
+
+    
+
+//     {/* </ScrollView> */}
+//     </View>
+    
+    
+//   );
+
+// }
