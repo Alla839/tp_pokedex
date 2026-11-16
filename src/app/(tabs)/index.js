@@ -1,7 +1,8 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
-import PokemonCard from "../components/PokemonCard";
-import POKEMONS from "../data/pokemons";
+import PokemonCard from "../../components/PokemonCard";
+import POKEMONS from "../../data/pokemons";
 
 
 // const POKEMONS = [
@@ -50,10 +51,9 @@ export default function Index() {
           <Text>{POKEMONS.length} pokémon. {captured.length} capturé 🎶🎶</Text>
           <Pressable onPress = {()=> Setcapturedonly (!capturedonly) }
            style = {{
-      backgroundColor : "purple",
-      padding : 10,
-      }}
-       >
+            backgroundColor : "purple",
+              padding : 10,}}
+          >
 
           <Text style={{ color: "white" }}>
           {capturedonly ? "Tt afficher" : "Mes captures"}</Text>
@@ -62,18 +62,20 @@ export default function Index() {
 
       }
 
-
      renderItem = {({item}) => (
      
-     
+     <Pressable onPress= {() => router.push(`/pokemon/${item.number}`)}> 
       <PokemonCard number = {item.number} name = {item.name} type=  {item.type}
       captured = {captured.includes (item.number)}
-      onCapture = {() => onCapture (item.number)} />
-      )}
-
+      onCapture = {() => onCapture (item.number)} /> 
       
     
+    
+    </Pressable>
+      )}
+      
     />
+    
     </View>
 
   );
