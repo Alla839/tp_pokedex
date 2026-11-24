@@ -1,9 +1,10 @@
 import { router } from "expo-router";
-import { useState } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
 import PokemonCard from "../../components/PokemonCard";
-import POKEMONS from "../../data/pokemons";
+// import POKEMONS from "../../data/pokemons";
 
+const API = "https://pokeapi.co/api/v2/pokemon?limit=151";
 
 // const POKEMONS = [
 //   { number: 1, name: "Bulbizarre", type: "Plante" },
@@ -17,6 +18,21 @@ import POKEMONS from "../../data/pokemons";
 
 
 export default function Index() {
+
+  const [pokemons, setPokemons] = useState(null);
+
+  async function charger() {
+ const reponse = await fetch (API);
+ const data = await reponse.json();
+ const liste = data.results.map((p, i) => ({ number: i + 1, name: p.name })); 
+ setPokemons(liste);
+ }
+
+ useEffect(() => {
+ charger();
+ }, []);
+
+
   // fct
   const [captured, setCaptured] = useState ([]); 
   const [capturedonly, Setcapturedonly]= useState (false)
@@ -29,7 +45,13 @@ export default function Index() {
     } else {setCaptured ([...captured, number])}
   };
 
-  const visible = capturedonly ? POKEMONS.filter((p) => captured.includes(p.number)):POKEMONS; 
+   if (!pokemons) { 
+    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+ }
+
+
+
+  const visible = capturedonly ? pokemons.filter((p) => captured.includes(p.number)):pokemons; 
   
 
 
@@ -44,11 +66,11 @@ export default function Index() {
       data = {visible}
       extraData = {captured}
       keyExtractor = {(item)=> String (item.number)}
-      numColumns = {2}
+      // numColumns = {2}
       
       ListHeaderComponent = {
         <View>
-          <Text>{POKEMONS.length} pokémon. {captured.length} capturé 🎶🎶</Text>
+          <Text>{pokemons.length} pokémon. {captured.length} capturé 🎶🎶</Text>
           <Pressable onPress = {()=> Setcapturedonly (!capturedonly) }
            style = {{
             backgroundColor : "purple",
@@ -79,8 +101,8 @@ export default function Index() {
     </View>
 
   );
-}
-      
+
+}     
 // <Compteur/>  
 //     <Aide/>  
 //     {/* // <Titre nombre = {POKEMONS.length} /> */}
